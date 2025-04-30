@@ -128,7 +128,7 @@ beautician_data = [
         'specialty': 'Massage Therapy',
         'qualification': 'Licensed Massage Therapist, Specialized in Deep Tissue and Hot Stone Massage',
         'experience': '9 years',
-        'bio': 'Michael provides therapeutic massage treatments tailored to each client's needs. Whether you need stress relief or help with muscle tension, his skilled techniques will leave you feeling relaxed and rejuvenated.',
+        'bio': 'Michael provides therapeutic massage treatments tailored to each client\'s needs. Whether you need stress relief or help with muscle tension, his skilled techniques will leave you feeling relaxed and rejuvenated.',
         'phone': '555-678-9012',
         'available': True,
         'working_hours': '12:00 PM - 8:00 PM',
