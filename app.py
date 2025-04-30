@@ -402,7 +402,6 @@ def contact():
         
     return render_template('contact.html', is_logged_in=is_logged_in())
 
-# Beauticians List Page
 @app.route('/beauticians')
 def beauticians_list():
     # Get all beauticians from DynamoDB
@@ -459,28 +458,47 @@ def appointments():
         {'id': 'waxing', 'name': 'Waxing Service', 'duration': '30', 'price': '30'}
     ]
     
+    # Get current date/time for min attribute in date picker
+    now = datetime.now()
+    
     return render_template('appointments.html', 
                           appointments=user_appointments, 
                           beauticians=beauticians,
                           services=services,
+                          now=now,
                           is_logged_in=is_logged_in())
 
-# Book Appointment Route
+# Book Appointment Route - make sure the route name matches what's in url_for()
 @app.route('/book-appointment', methods=['POST'])
 def book_appointment():
     if not is_logged_in():
         flash("Please log in to book appointments.", "danger")
         return redirect(url_for('login'))
+    
+    # Debug: print form data
+    app.logger.info(f"Form data: {request.form}")
         
-    beautician_id = request.form['beautician_id']
-    service_id = request.form['service_id']
-    appointment_date = request.form['appointment_date']
-    appointment_time = request.form['appointment_time']
+    beautician_id = request.form.get('beautician_id')
+    service_id = request.form.get('service_id')
+    appointment_date = request.form.get('appointment_date')
+    appointment_time = request.form.get('appointment_time')
     special_requests = request.form.get('special_requests', '')
     
-    # Basic validation
-    if not beautician_id or not service_id or not appointment_date or not appointment_time:
-        flash("All fields are required to book an appointment.", "danger")
+    # Basic validation with more detailed error messages
+    if not beautician_id:
+        flash("Please select a beautician.", "danger")
+        return redirect(url_for('appointments'))
+    
+    if not service_id:
+        flash("Please select a service.", "danger")
+        return redirect(url_for('appointments'))
+    
+    if not appointment_date:
+        flash("Please select an appointment date.", "danger")
+        return redirect(url_for('appointments'))
+    
+    if not appointment_time:
+        flash("Please select an appointment time.", "danger")
         return redirect(url_for('appointments'))
     
     # Get beautician details
@@ -515,35 +533,41 @@ def book_appointment():
     appointment_id = str(uuid.uuid4())
     
     # Store appointment in DynamoDB
-    appointments_table.put_item(
-        Item={
-            'appointment_id': appointment_id,
-            'client_email': session['user_email'],
-            'client_name': session['user_name'],
-            'beautician_id': beautician_id,
-            'beautician_name': beautician['name'],
-            'beautician_specialty': beautician['specialty'],
-            'service_id': service_id,
-            'service_name': service['name'],
-            'service_duration': service['duration'],
-            'service_price': service['price'],
-            'appointment_date': appointment_date,
-            'appointment_time': appointment_time,
-            'appointment_datetime': appointment_datetime,
-            'special_requests': special_requests,
-            'status': 'scheduled',
-            'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
-    )
+    try:
+        appointments_table.put_item(
+            Item={
+                'appointment_id': appointment_id,
+                'client_email': session['user_email'],
+                'client_name': session['user_name'],
+                'beautician_id': beautician_id,
+                'beautician_name': beautician['name'],
+                'beautician_specialty': beautician['specialty'],
+                'service_id': service_id,
+                'service_name': service['name'],
+                'service_duration': service['duration'],
+                'service_price': service['price'],
+                'appointment_date': appointment_date,
+                'appointment_time': appointment_time,
+                'appointment_datetime': appointment_datetime,
+                'special_requests': special_requests,
+                'status': 'scheduled',
+                'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+        )
+        
+        # Send confirmation email to client
+        appointment_confirmation = f"Dear {session['user_name']},\n\nYour appointment for {service['name']} with {beautician['name']} has been scheduled for {appointment_date} at {appointment_time}.\n\nDuration: {service['duration']} minutes\nPrice: ${service['price']}\n\nSpecial Requests: {special_requests if special_requests else 'None'}\n\nPlease arrive 10 minutes before your scheduled time.\n\nBest regards,\nGlow Beauty Salon"
+        send_email(session['user_email'], "Beauty Appointment Confirmation", appointment_confirmation)
+        
+        flash("Appointment booked successfully!", "success")
+        return redirect(url_for('my_appointments'))
     
-    # Send confirmation email to client
-    appointment_confirmation = f"Dear {session['user_name']},\n\nYour appointment for {service['name']} with {beautician['name']} has been scheduled for {appointment_date} at {appointment_time}.\n\nDuration: {service['duration']} minutes\nPrice: ${service['price']}\n\nSpecial Requests: {special_requests if special_requests else 'None'}\n\nPlease arrive 10 minutes before your scheduled time.\n\nBest regards,\nGlow Beauty Salon"
-    send_email(session['user_email'], "Beauty Appointment Confirmation", appointment_confirmation)
-    
-    flash("Appointment booked successfully!", "success")
-    return redirect(url_for('my_appointments'))
+    except Exception as e:
+        app.logger.error(f"Error booking appointment: {str(e)}")
+        flash(f"Error booking appointment: {str(e)}", "danger")
+        return redirect(url_for('appointments'))
 
-# My Appointments Page
+# My Appointments Page (separate from booking page)
 @app.route('/my-appointments')
 def my_appointments():
     if not is_logged_in():
@@ -559,23 +583,9 @@ def my_appointments():
     # Sort appointments by date/time
     user_appointments.sort(key=lambda x: x.get('appointment_datetime', ''))
     
-    # Separate upcoming and past appointments
-    upcoming_appointments = []
-    past_appointments = []
-    now = datetime.now()
-    
-    for appointment in user_appointments:
-        appointment_dt = datetime.strptime(appointment['appointment_datetime'], "%Y-%m-%d %H:%M")
-        if appointment_dt > now:
-            upcoming_appointments.append(appointment)
-        else:
-            past_appointments.append(appointment)
-    
     return render_template('my_appointments.html', 
-                          upcoming_appointments=upcoming_appointments,
-                          past_appointments=past_appointments,
+                          appointments=user_appointments,
                           is_logged_in=is_logged_in())
-
 # Reschedule Appointment Page
 @app.route('/reschedule-appointment/<appointment_id>', methods=['GET', 'POST'])
 def reschedule_appointment(appointment_id):
