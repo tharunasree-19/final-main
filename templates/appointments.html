@@ -122,33 +122,33 @@
 </div>
 {% endblock %}
 {% block scripts %}
- <script>
-     document.addEventListener('DOMContentLoaded', function() {
-         // Set minimum date for the appointment date picker to today
-         const today = new Date().toISOString().split('T')[0];
-         document.getElementById('appointment_date').setAttribute('min', today);
-         
-         // Debug form submission
-         const form = document.querySelector('form');
-         form.addEventListener('submit', function(event) {
-             // Check if all required fields are filled
-             const service = document.getElementById('service_id').value;
-             const beautician = document.getElementById('beautician_id').value;
-             const date = document.getElementById('appointment_date').value;
-             const time = document.getElementById('appointment_time').value;
-             
-             console.log('Form submission values:');
-             console.log('Service:', service);
-             console.log('Beautician:', beautician);
-             console.log('Date:', date);
-             console.log('Time:', time);
-             
-             // If any required field is empty, prevent form submission and show error
-             if (!service || !beautician || !date || !time) {
-                 event.preventDefault();
-                 alert('Please fill in all required fields.');
-             }
-         });
-     });
- </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('form');
+
+  form.addEventListener('submit', function(event) {
+    // 1) Read each field by its HTML id
+    const service     = document.getElementById('service_id')     ?.value || '';
+    const beautician  = document.getElementById('beautician_id') ?.value || '';
+    const date        = document.getElementById('appointment_date')?.value || '';
+    const time        = document.getElementById('appointment_time')?.value || '';
+
+    // 2) Log them in the browser console for debugging
+    console.log({
+      service,
+      beautician,
+      date,
+      time
+    });
+
+    // 3) If any are empty, block and alert
+    if (!service || !beautician || !date || !time) {
+      event.preventDefault();
+      alert('Please fill in all required fields.');
+    }
+    // Otherwise—do nothing, the form will submit normally
+  });
+});
+</script>
 {% endblock %}
+
