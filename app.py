@@ -478,27 +478,16 @@ def book_appointment():
     # Debug: print form data
     app.logger.info(f"Form data: {request.form}")
         
+    # Get form data
     beautician_id = request.form.get('beautician_id')
     service_id = request.form.get('service_id')
     appointment_date = request.form.get('appointment_date')
     appointment_time = request.form.get('appointment_time')
     special_requests = request.form.get('special_requests', '')
     
-    # Basic validation with more detailed error messages
-    if not beautician_id:
-        flash("Please select a beautician.", "danger")
-        return redirect(url_for('appointments'))
-    
-    if not service_id:
-        flash("Please select a service.", "danger")
-        return redirect(url_for('appointments'))
-    
-    if not appointment_date:
-        flash("Please select an appointment date.", "danger")
-        return redirect(url_for('appointments'))
-    
-    if not appointment_time:
-        flash("Please select an appointment time.", "danger")
+    # Validate all required fields
+    if not all([beautician_id, service_id, appointment_date, appointment_time]):
+        flash("All fields are required to book an appointment.", "danger")
         return redirect(url_for('appointments'))
     
     # Get beautician details
@@ -1001,114 +990,123 @@ def change_password():
 
 # Beauty Packages
 @app.route('/packages')
-def beauty_packages():
-    packages = [
-        {
-            'id': 'basic',
-            'name': 'Basic Beauty Package',
-            'price': '99',
-            'description': 'Perfect for a quick refresh. Includes a basic facial, express manicure, and blowout styling.',
-            'services': ['Express Facial', 'Express Manicure', 'Blowout Styling'],
-            'duration': '2 hours'
-        },
-        {
-            'id': 'premium',
+def packages():
+    # Define packages (or fetch from database)
+    packages = {
+        'pamper': {
+            'id': 'pamper',
             'name': 'Premium Pamper Package',
-            'price': '179',
             'description': 'Complete relaxation experience with premium treatments for face, hair, and nails.',
-            'services': ['Premium Facial', 'Hair Treatment', 'Gel Manicure', 'Classic Pedicure'],
-            'duration': '3.5 hours'
+            'price': '179',
+            'duration': '3.5 hours',
+            'services': ['Premium Facial', 'Hair Treatment', 'Gel Manicure']
         },
-        {
+        'bridal': {
             'id': 'bridal',
             'name': 'Bridal Beauty Package',
+            'description': 'Complete bridal beauty service including hair styling, makeup, manicure and facial.',
             'price': '249',
-            'description': 'Special package for the bride-to-be. Look your absolute best on your special day.',
-            'services': ['Bridal Makeup', 'Hair Styling', 'Manicure & Pedicure', 'Facial Treatment'],
-            'duration': '4 hours'
+            'duration': '4 hours',
+            'services': ['Bridal Makeup', 'Bridal Hair Styling', 'Manicure', 'Express Facial']
         },
-        {
-            'id': 'mens',
-            'name': 'Men\'s Grooming Package',
-            'price': '89',
-            'description': 'Tailored grooming services for men including haircut, facial, and hand treatment.',
-            'services': ['Men\'s Haircut', 'Men\'s Facial', 'Hand Grooming'],
-            'duration': '1.5 hours'
+        'relax': {
+            'id': 'relax',
+            'name': 'Relaxation Package',
+            'description': 'Full body relaxation with massage, facial, and aromatherapy treatment.',
+            'price': '159',
+            'duration': '2.5 hours',
+            'services': ['Full Body Massage', 'Express Facial', 'Aromatherapy']
         }
-    ]
+    }
     
     return render_template('packages.html', packages=packages, is_logged_in=is_logged_in())
+@app.route('/package/<package_id>')
+def view_package(package_id):
+    # Define packages dictionary (or fetch from database)
+    packages = {
+        'pamper': {
+            'name': 'Premium Pamper Package',
+            'description': 'Complete relaxation experience with premium treatments for face, hair, and nails.',
+            'price': '179',
+            'duration': '3.5 hours',
+            'services': ['Premium Facial', 'Hair Treatment', 'Gel Manicure']
+        },
+        # Add other packages as needed
+    }
+    
+    package = packages.get(package_id)
+    if not package:
+        flash("Package not found!", "danger")
+        return redirect(url_for('packages'))
+    
+    # Get all beauticians for package booking
+    response = beauticians_table.scan()
+    beauticians = response.get('Items', [])
+    
+    # Get current date for min attribute in date picker
+    now = datetime.now()
+    
+    return render_template('book_package.html', 
+                          package=package,
+                          package_id=package_id,
+                          beauticians=beauticians,
+                          now=now,
+                          is_logged_in=is_logged_in())
 
 # Book Package Route
-@app.route('/book-package/<package_id>', methods=['GET', 'POST'])
+@app.route('/book-package/<package_id>', methods=['POST'])
 def book_package(package_id):
     if not is_logged_in():
         flash("Please log in to book packages.", "danger")
         return redirect(url_for('login'))
     
+    # Debug: print form data
+    app.logger.info(f"Package booking form data: {request.form}")
+    
+    # Get form data
+    beautician_id = request.form.get('beautician_id')
+    appointment_date = request.form.get('appointment_date')
+    appointment_time = request.form.get('appointment_time')
+    special_requests = request.form.get('special_requests', '')
+    
+    # Validate all required fields
+    if not all([beautician_id, appointment_date, appointment_time]):
+        flash("All fields are required to book a package.", "danger")
+        return redirect(url_for('view_package', package_id=package_id))
+    
+    # Get beautician details
+    response = beauticians_table.get_item(Key={'beautician_id': beautician_id})
+    beautician = response.get('Item')
+    
+    if not beautician:
+        flash("Selected beautician not found.", "danger")
+        return redirect(url_for('view_package', package_id=package_id))
+    
+    # Get package details - this is a sample, you'll need to adapt to your actual package data structure
     packages = {
-        'basic': {
-            'name': 'Basic Beauty Package',
-            'price': '99',
-            'description': 'Perfect for a quick refresh. Includes a basic facial, express manicure, and blowout styling.',
-            'services': ['Express Facial', 'Express Manicure', 'Blowout Styling'],
-            'duration': '2 hours'
-        },
-        'premium': {
+        'pamper': {
             'name': 'Premium Pamper Package',
-            'price': '179',
             'description': 'Complete relaxation experience with premium treatments for face, hair, and nails.',
-            'services': ['Premium Facial', 'Hair Treatment', 'Gel Manicure', 'Classic Pedicure'],
-            'duration': '3.5 hours'
+            'price': '179',
+            'duration': '3.5 hours',
+            'services': ['Premium Facial', 'Hair Treatment', 'Gel Manicure']
         },
-        'bridal': {
-            'name': 'Bridal Beauty Package',
-            'price': '249',
-            'description': 'Special package for the bride-to-be. Look your absolute best on your special day.',
-            'services': ['Bridal Makeup', 'Hair Styling', 'Manicure & Pedicure', 'Facial Treatment'],
-            'duration': '4 hours'
-        },
-        'mens': {
-            'name': 'Men\'s Grooming Package',
-            'price': '89',
-            'description': 'Tailored grooming services for men including haircut, facial, and hand treatment.',
-            'services': ['Men\'s Haircut', 'Men\'s Facial', 'Hand Grooming'],
-            'duration': '1.5 hours'
-        }
+        # Add other packages as needed
     }
     
-    if package_id not in packages:
+    package = packages.get(package_id)
+    if not package:
         flash("Selected package not found.", "danger")
-        return redirect(url_for('beauty_packages'))
+        return redirect(url_for('packages'))
     
-    package = packages[package_id]
+    # Create appointment datetime string for sorting
+    appointment_datetime = f"{appointment_date} {appointment_time}"
     
-    if request.method == 'POST':
-        beautician_id = request.form['beautician_id']
-        appointment_date = request.form['appointment_date']
-        appointment_time = request.form['appointment_time']
-        special_requests = request.form.get('special_requests', '')
-        
-        # Basic validation
-        if not beautician_id or not appointment_date or not appointment_time:
-            flash("All fields are required to book a package.", "danger")
-            return redirect(url_for('book_package', package_id=package_id))
-        
-        # Get beautician details
-        response = beauticians_table.get_item(Key={'beautician_id': beautician_id})
-        beautician = response.get('Item')
-        
-        if not beautician:
-            flash("Selected beautician not found.", "danger")
-            return redirect(url_for('book_package', package_id=package_id))
-        
-        # Create appointment datetime string for sorting
-        appointment_datetime = f"{appointment_date} {appointment_time}"
-        
-        # Generate a unique appointment ID
-        appointment_id = str(uuid.uuid4())
-        
-        # Store appointment in DynamoDB
+    # Generate a unique appointment ID
+    appointment_id = str(uuid.uuid4())
+    
+    # Store package booking in DynamoDB
+    try:
         appointments_table.put_item(
             Item={
                 'appointment_id': appointment_id,
@@ -1117,12 +1115,11 @@ def book_package(package_id):
                 'beautician_id': beautician_id,
                 'beautician_name': beautician['name'],
                 'beautician_specialty': beautician['specialty'],
-                'service_id': f"package_{package_id}",
-                'service_name': package['name'],
-                'service_duration': package['duration'],
-                'service_price': package['price'],
                 'is_package': True,
-                'package_services': package['services'],
+                'package_id': package_id,
+                'package_name': package['name'],
+                'service_duration': package['duration'].replace(' hours', ''),
+                'service_price': package['price'],
                 'appointment_date': appointment_date,
                 'appointment_time': appointment_time,
                 'appointment_datetime': appointment_datetime,
@@ -1133,22 +1130,16 @@ def book_package(package_id):
         )
         
         # Send confirmation email to client
-        services_list = "\n".join([f"- {service}" for service in package['services']])
-        appointment_confirmation = f"Dear {session['user_name']},\n\nYour appointment for the {package['name']} with {beautician['name']} has been scheduled for {appointment_date} at {appointment_time}.\n\nServices included:\n{services_list}\n\nDuration: {package['duration']}\nPrice: ${package['price']}\n\nSpecial Requests: {special_requests if special_requests else 'None'}\n\nPlease arrive 15 minutes before your scheduled time.\n\nBest regards,\nGlow Beauty Salon"
-        send_email(session['user_email'], "Beauty Package Appointment Confirmation", appointment_confirmation)
+        appointment_confirmation = f"Dear {session['user_name']},\n\nYour booking for {package['name']} with {beautician['name']} has been scheduled for {appointment_date} at {appointment_time}.\n\nDuration: {package['duration']}\nPrice: ${package['price']}\n\nServices included: {', '.join(package['services'])}\n\nSpecial Requests: {special_requests if special_requests else 'None'}\n\nPlease arrive 10 minutes before your scheduled time.\n\nBest regards,\nGlow Beauty Salon"
+        send_email(session['user_email'], "Beauty Package Booking Confirmation", appointment_confirmation)
         
-        flash("Package appointment booked successfully!", "success")
+        flash("Package booked successfully!", "success")
         return redirect(url_for('my_appointments'))
     
-    # Get all beauticians for appointment booking
-    response = beauticians_table.scan()
-    beauticians = response.get('Items', [])
-    
-    return render_template('book_package.html', 
-                          package=package,
-                          package_id=package_id,
-                          beauticians=beauticians,
-                          is_logged_in=is_logged_in())
+    except Exception as e:
+        app.logger.error(f"Error booking package: {str(e)}")
+        flash(f"Error booking package: {str(e)}", "danger")
+        return redirect(url_for('view_package', package_id=package_id))
 
 # Testimonials Page
 @app.route('/testimonials')
