@@ -669,12 +669,10 @@ def cancel_appointment(appointment_id):
     return redirect(url_for('my_appointments'))
 
 # Beauty Tips Page
-@app.route('/beauty-tips')
+@app.route("/beauty-tips")
 def beauty_tips_page():
-    return render_template('beauty_tips.html', 
-                          tips=beauty_tips, 
-                          concerns=beauty_concerns,
-                          is_logged_in=is_logged_in())
+    return render_template("beauty_tips.html", is_logged_in=is_logged_in())
+
 
 # Client Profile Page
 @app.route('/profile')
@@ -989,37 +987,10 @@ def change_password():
     return render_template('change_password.html', is_logged_in=is_logged_in())
 
 # Beauty Packages
-@app.route('/packages')
-def packages():
-    # Define packages (or fetch from database)
-    packages = {
-        'pamper': {
-            'id': 'pamper',
-            'name': 'Premium Pamper Package',
-            'description': 'Complete relaxation experience with premium treatments for face, hair, and nails.',
-            'price': '179',
-            'duration': '3.5 hours',
-            'services': ['Premium Facial', 'Hair Treatment', 'Gel Manicure']
-        },
-        'bridal': {
-            'id': 'bridal',
-            'name': 'Bridal Beauty Package',
-            'description': 'Complete bridal beauty service including hair styling, makeup, manicure and facial.',
-            'price': '249',
-            'duration': '4 hours',
-            'services': ['Bridal Makeup', 'Bridal Hair Styling', 'Manicure', 'Express Facial']
-        },
-        'relax': {
-            'id': 'relax',
-            'name': 'Relaxation Package',
-            'description': 'Full body relaxation with massage, facial, and aromatherapy treatment.',
-            'price': '159',
-            'duration': '2.5 hours',
-            'services': ['Full Body Massage', 'Express Facial', 'Aromatherapy']
-        }
-    }
-    
-    return render_template('packages.html', packages=packages, is_logged_in=is_logged_in())
+@app.route("/packages")
+def beauty_packages():
+    return render_template("packages.html", is_logged_in=is_logged_in())
+
 @app.route('/package/<package_id>')
 def view_package(package_id):
     # Define packages dictionary (or fetch from database)
