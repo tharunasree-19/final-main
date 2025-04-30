@@ -128,6 +128,28 @@
         // Set minimum date for the appointment date picker to today
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('appointment_date').setAttribute('min', today);
+        
+        // Debug form submission
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            // Check if all required fields are filled
+            const service = document.getElementById('service_id').value;
+            const beautician = document.getElementById('beautician_id').value;
+            const date = document.getElementById('appointment_date').value;
+            const time = document.getElementById('appointment_time').value;
+            
+            console.log('Form submission values:');
+            console.log('Service:', service);
+            console.log('Beautician:', beautician);
+            console.log('Date:', date);
+            console.log('Time:', time);
+            
+            // If any required field is empty, prevent form submission and show error
+            if (!service || !beautician || !date || !time) {
+                event.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
     });
 </script>
 {% endblock %}
