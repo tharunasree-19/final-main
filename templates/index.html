@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Beauty & Wellness at Your Fingertips</h1>
+            <p class="lead mb-4">Experience premium beauty treatments and services at Glow Beauty Salon. Your journey to beauty and relaxation starts here.</p>
+            <div class="d-flex">
+                <a href="{{ url_for('appointments') }}" class="btn btn-primary me-3">Book Appointment</a>
+                <a href="{{ url_for('services') }}" class="btn btn-outline-light">Our Services</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Services -->
+<section class="my-5">
+    <div class="container">
+        <h2 class="section-title">Our Services</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card service-card">
+                    <img src="/static/images/hair service.jpeg" class="card-img-top" alt="Hair Services">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Hair Services</h5>
+                        <p class="card-text">From haircuts to color treatments, our stylists will transform your look.</p>
+                        <a href="{{ url_for('services') }}#hair" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card service-card">
+                    <img src="/static/images/facial.jpeg" class="card-img-top" alt="Facial Treatments">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Facial Treatments</h5>
+                        <p class="card-text">Rejuvenate your skin with our range of specialized facial treatments.</p>
+                        <a href="{{ url_for('services') }}#face" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card service-card">
+                    <img src="/static/images/nail care.jpeg" class="card-img-top" alt="Nail Services">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Nail Services</h5>
+                        <p class="card-text">Pamper your hands and feet with our professional nail care services.</p>
+                        <a href="{{ url_for('services') }}#nails" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('services') }}" class="btn btn-primary">View All Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- Beauty Tips -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="section-title">Beauty Tips</h2>
+        <div class="row">
+            {% for tip in tips %}
+            <div class="col-md-4">
+                <div class="tip-card">
+                    <span class="tip-category">{{ tip.category }}</span>
+                    <h5>{{ tip.title }}</h5>
+                    <p>{{ tip.content }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('beauty_tips_page') }}" class="btn btn-primary">More Beauty Tips</a>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="my-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2>Ready to Transform Your Look?</h2>
+                <p>Book an appointment with our experienced beauticians and treat yourself to a day of pampering. Our professional team is ready to help you look and feel your best.</p>
+                <a href="{{ url_for('appointments') }}" class="btn btn-primary">Book Now</a>
+            </div>
+            <div class="col-md-6">
+                <img src="/static/images/salon interior.jpeg" alt="Salon Interior" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Beauticians -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="section-title">Meet Our Experts</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card beautician-card text-center">
+                    <img src="/static/images/beautician1.jpg" class="card-img-top rounded-circle mx-auto mt-3" alt="Beautician" style="width: 150px; height: 150px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Emma Johnson</h5>
+                        <p class="card-text text-muted">Hair Stylist</p>
+                        <a href="{{ url_for('beauticians_list') }}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card beautician-card text-center">
+                    <img src="/static/images/beautician2.jpg" class="card-img-top rounded-circle mx-auto mt-3" alt="Beautician" style="width: 150px; height: 150px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Sophia Rodriguez</h5>
+                        <p class="card-text text-muted">Makeup Artist</p>
+                        <a href="{{ url_for('beauticians_list') }}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card beautician-card text-center">
+                    <img src="/static/images/beautician3.jpg" class="card-img-top rounded-circle mx-auto mt-3" alt="Beautician" style="width: 150px; height: 150px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Maria Chen</h5>
+                        <p class="card-text text-muted">Nail Technician</p>
+                        <a href="{{ url_for('beauticians_list') }}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card beautician-card text-center">
+                    <img src="/static/images/beautician4.jpg" class="card-img-top rounded-circle mx-auto mt-3" alt="Beautician" style="width: 150px; height: 150px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Olivia Smith</h5>
+                        <p class="card-text text-muted">Facial Specialist</p>
+                        <a href="{{ url_for('beauticians_list') }}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('beauticians_list') }}" class="btn btn-primary">View All Beauticians</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Book an Appointment{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Book Your Appointment</h1>
+    
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">New Appointment</h3>
+                    
+                    <form action="{{ url_for('book_appointment') }}" method="post">
+                        <div class="mb-3">
+                            <label for="service_id" class="form-label">Select Service</label>
+                            <select name="service_id" id="service_id" class="form-select" required>
+                                <option value="">-- Select a Service --</option>
+                                {% for service in services %}
+                                <option value="{{ service.id }}">{{ service.name }} ({{ service.duration }} min - ${{ service.price }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="beautician_id" class="form-label">Select Beautician</label>
+                            <select name="beautician_id" id="beautician_id" class="form-select" required>
+                                <option value="">-- Select a Beautician --</option>
+                                {% for beautician in beauticians %}
+                                <option value="{{ beautician.beautician_id }}">{{ beautician.name }} ({{ beautician.specialty }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="appointment_date" class="form-label">Date</label>
+                                <input type="date" name="appointment_date" id="appointment_date" class="form-control" min="{{ now.strftime('%Y-%m-%d') }}" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="appointment_time" class="form-label">Time</label>
+                                <select name="appointment_time" id="appointment_time" class="form-select" required>
+                                    <option value="">-- Select Time --</option>
+                                    <option value="09:00">9:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="13:00">1:00 PM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="15:00">3:00 PM</option>
+                                    <option value="16:00">4:00 PM</option>
+                                    <option value="17:00">5:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="special_requests" class="form-label">Special Requests (Optional)</label>
+                            <textarea name="special_requests" id="special_requests" class="form-control" rows="3" placeholder="Any specific requirements or notes for your appointment"></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Book Appointment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center">Your Appointments</h3>
+                    
+                    {% if appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Beautician</th>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                <tr>
+                                    <td>{{ appointment.service_name }}</td>
+                                    <td>{{ appointment.beautician_name }}</td>
+                                    <td>{{ appointment.appointment_date }} at {{ appointment.appointment_time }}</td>
+                                    <td><span class="badge {% if appointment.status == 'scheduled' %}bg-success{% elif appointment.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">{{ appointment.status }}</span></td>
+                                    <td>
+                                        {% if appointment.status == 'scheduled' %}
+                                        <a href="{{ url_for('reschedule_appointment', appointment_id=appointment.appointment_id) }}" class="btn btn-sm btn-outline-primary">Reschedule</a>
+                                        <form action="{{ url_for('cancel_appointment', appointment_id=appointment.appointment_id) }}" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to cancel this appointment?')">Cancel</button>
+                                        </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center">You don't have any appointments yet.</p>
+                    {% endif %}
+                    
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('my_appointments') }}" class="btn btn-outline-primary">View All Appointments</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set minimum date for the appointment date picker to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('appointment_date').setAttribute('min', today);
+    });
+</script>
+{% endblock %}

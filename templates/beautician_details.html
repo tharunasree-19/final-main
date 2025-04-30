@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ beautician.name }} - Beautician Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-user-circle fa-7x text-primary"></i>
+                    </div>
+                    <h2>{{ beautician.name }}</h2>
+                    <p class="badge bg-info text-white mb-3">{{ beautician.specialty }}</p>
+                    
+                    <div class="text-start mt-4">
+                        <p><strong>Experience:</strong> {{ beautician.experience }} years</p>
+                        <p><strong>Qualification:</strong> {{ beautician.qualification }}</p>
+                    </div>
+                    
+                    {% if is_logged_in %}
+                    <a href="{{ url_for('appointments') }}" class="btn btn-primary mt-3 w-100">Book an Appointment</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary mt-3 w-100">Login to Book</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title border-bottom pb-3">About {{ beautician.name }}</h3>
+                    <div class="beautician-bio mb-4">
+                        <p>{{ beautician.bio }}</p>
+                    </div>
+                    
+                    <h4 class="mt-4">Specialties</h4>
+                    <div class="specialties mb-4">
+                        <p>{{ beautician.specialty }}</p>
+                        <!-- Additional specialties would be listed here if they were in the data model -->
+                    </div>
+                    
+                    <h4 class="mt-4">Schedule a Consultation</h4>
+                    <p>Want to discuss your beauty needs before booking? Contact our salon to schedule a free consultation with {{ beautician.name }}.</p>
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline-primary">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title border-bottom pb-3">Beauty Philosophy</h3>
+                    <p>At Glow Beauty Salon, our beauticians believe in enhancing your natural beauty rather than masking it. {{ beautician.name }} is passionate about helping clients feel confident and radiant in their own skin.</p>
+                    
+                    <p>Every treatment is personalized to meet your specific needs and preferences, ensuring that you receive the best care possible. Our team stays up-to-date with the latest beauty trends and techniques to provide you with exceptional service.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

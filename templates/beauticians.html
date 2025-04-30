@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Our Team{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Meet Our Beauty Experts</h1>
+        <p class="lead mb-5">Our team of experienced beauticians is dedicated to helping you look and feel your best. Each specialist brings unique skills and expertise to provide you with exceptional service.</p>
+    </div>
+</div>
+
+{% if beauticians %}
+    <div class="row">
+        {% set current_specialty = '' %}
+        {% for beautician in beauticians %}
+            {% if beautician.specialty != current_specialty %}
+                {% set current_specialty = beautician.specialty %}
+                <div class="col-12">
+                    <h3 class="mt-4 mb-3 specialty-heading">{{ current_specialty }}</h3>
+                </div>
+            {% endif %}
+            
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow beautician-card">
+                    <div class="text-center pt-4">
+                        <div class="beautician-avatar rounded-circle mx-auto d-flex justify-content-center align-items-center">
+                            <i class="fas fa-user fa-3x text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ beautician.name }}</h5>
+                        <p class="card-subtitle mb-2 text-muted">{{ beautician.specialty }}</p>
+                        <p class="card-text mt-3 beautician-short-bio">{{ beautician.bio[:100] }}{% if beautician.bio|length > 100 %}...{% endif %}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-center">
+                        <a href="{{ url_for('beautician_details', beautician_id=beautician.beautician_id) }}" class="btn btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <p>Our team information is being updated. Please check back soon!</p>
+    </div>
+{% endif %}
+
+<div class="row mt-5">
+    <div class="col-12 text-center">
+        <div class="cta-box p-4 bg-light rounded shadow-sm">
+            <h3>Ready to Experience Our Expert Care?</h3>
+            <p class="mb-3">Book an appointment today and let our specialists help you look and feel amazing!</p>
+            <a href="{{ url_for('appointments') }}" class="btn btn-primary">Book Appointment</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .beautician-avatar {
+        width: 120px;
+        height: 120px;
+        background-color: #f8f9fa;
+    }
+    .specialty-heading {
+        border-bottom: 2px solid #dee2e6;
+        padding-bottom: 0.5rem;
+    }
+    .beautician-card:hover {
+        transform: translateY(-5px);
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .cta-box {
+        background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    }
+</style>
+{% endblock %}

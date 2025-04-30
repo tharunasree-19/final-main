@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="mb-4">About Glow Beauty Salon</h1>
+        <p class="lead">Your Premier Destination for Beauty and Wellness</p>
+        
+        <div class="mb-4">
+            <h3>Our Story</h3>
+            <p>Founded in 2015, Glow Beauty Salon was born from a passion for helping people look and feel their best. Our founder, Emma Johnson, envisioned a place where clients could receive exceptional beauty services in a relaxing and welcoming environment.</p>
+            <p>What started as a small studio has grown into a full-service salon with a team of skilled professionals dedicated to providing personalized care and stunning results.</p>
+        </div>
+        
+        <div class="mb-4">
+            <h3>Our Mission</h3>
+            <p>At Glow Beauty Salon, our mission is to enhance your natural beauty and boost your confidence through customized treatments and expert care. We believe that everyone deserves to feel beautiful, and we're committed to helping you achieve your beauty goals.</p>
+        </div>
+        
+        <div class="mb-4">
+            <h3>Our Approach</h3>
+            <p>We take a holistic approach to beauty, focusing not just on appearances but on overall wellness. Our team stays up-to-date with the latest trends and techniques to ensure you receive the best service possible.</p>
+            <p>We use only high-quality, cruelty-free products that are gentle on your skin and hair while delivering exceptional results.</p>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h4>Why Choose Us?</h4>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check-circle text-success me-2"></i> Experienced, certified professionals</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i> Personalized treatments</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i> Premium, cruelty-free products</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i> Relaxing, clean environment</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i> Competitive pricing</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card shadow">
+            <div class="card-body">
+                <h4>Visit Us</h4>
+                <p>
+                    <strong>Address:</strong><br>
+                    123 Beauty Street<br>
+                    City, State ZIP
+                </p>
+                <p>
+                    <strong>Hours:</strong><br>
+                    Monday - Friday: 9am - 8pm<br>
+                    Saturday: 9am - 6pm<br>
+                    Sunday: 10am - 4pm
+                </p>
+                <a href="{{ url_for('contact') }}" class="btn btn-primary">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 class="text-center mb-4">Meet Our Leadership</h3>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-center mb-4">
+            <div class="card-body">
+                <div class="rounded-circle bg-light d-inline-flex justify-content-center align-items-center mb-3" style="width: 120px; height: 120px;">
+                    <i class="fas fa-user fa-4x text-primary"></i>
+                </div>
+                <h5 class="card-title">Emma Johnson</h5>
+                <p class="card-subtitle mb-2 text-muted">Founder & Creative Director</p>
+                <p class="card-text">With over 15 years of experience in the beauty industry, Emma brings creativity and vision to Glow Beauty Salon.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-center mb-4">
+            <div class="card-body">
+                <div class="rounded-circle bg-light d-inline-flex justify-content-center align-items-center mb-3" style="width: 120px; height: 120px;">
+                    <i class="fas fa-user fa-4x text-primary"></i>
+                </div>
+                <h5 class="card-title">Sarah Miller</h5>
+                <p class="card-subtitle mb-2 text-muted">Head Beautician</p>
+                <p class="card-text">Sarah specializes in innovative hair techniques and leads our team of skilled beauticians.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-center mb-4">
+            <div class="card-body">
+                <div class="rounded-circle bg-light d-inline-flex justify-content-center align-items-center mb-3" style="width: 120px; height: 120px;">
+                    <i class="fas fa-user fa-4x text-primary"></i>
+                </div>
+                <h5 class="card-title">Michael Chen</h5>
+                <p class="card-subtitle mb-2 text-muted">Wellness Director</p>
+                <p class="card-text">Michael ensures that all our treatments maintain the perfect balance between beauty and wellness.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

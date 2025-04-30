@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Book {{ package.name }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Book {{ package.name }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5 class="card-title">Package Details</h5>
+                        <p>{{ package.description }}</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Price:</strong> ${{ package.price }}</p>
+                                <p><strong>Duration:</strong> {{ package.duration }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Services Included:</strong></p>
+                                <ul>
+                                    {% for service in package.services %}
+                                    <li>{{ service }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('book_package', package_id=package_id) }}">
+                        <h5 class="card-title">Booking Information</h5>
+                        <div class="mb-3">
+                            <label for="beautician_id" class="form-label">Select Beautician</label>
+                            <select class="form-select" id="beautician_id" name="beautician_id" required>
+                                <option value="">Choose a beautician...</option>
+                                {% for beautician in beauticians %}
+                                <option value="{{ beautician.beautician_id }}">{{ beautician.name }} ({{ beautician.specialty }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="appointment_date" class="form-label">Appointment Date</label>
+                                    <input type="date" class="form-control" id="appointment_date" name="appointment_date" required min="{{ now.strftime('%Y-%m-%d') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="appointment_time" class="form-label">Appointment Time</label>
+                                    <select class="form-select" id="appointment_time" name="appointment_time" required>
+                                        <option value="">Choose a time...</option>
+                                        <option value="09:00">9:00 AM</option>
+                                        <option value="10:00">10:00 AM</option>
+                                        <option value="11:00">11:00 AM</option>
+                                        <option value="12:00">12:00 PM</option>
+                                        <option value="13:00">1:00 PM</option>
+                                        <option value="14:00">2:00 PM</option>
+                                        <option value="15:00">3:00 PM</option>
+                                        <option value="16:00">4:00 PM</option>
+                                        <option value="17:00">5:00 PM</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="special_requests" class="form-label">Special Requests (Optional)</label>
+                            <textarea class="form-control" id="special_requests" name="special_requests" rows="3" placeholder="Any special requirements or preferences?"></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Book Package</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr('#appointment_date', {
+            minDate: "today",
+            disable: [
+                function(date) {
+                    // Disable Sundays
+                    return (date.getDay() === 0);
+                }
+            ],
+            locale: {
+                "firstDayOfWeek": 1 // start week on Monday
+            }
+        });
+    });
+</script>
+{% endblock %}

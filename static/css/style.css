@@ -1,0 +1,288 @@
+/* General Styles */
+:root {
+    --primary-color: #f06292;
+    --secondary-color: #e91e63;
+    --accent-color: #ff94c2;
+    --light-color: #fce4ec;
+    --dark-color: #283747;
+    --text-color: #333;
+    --white-color: #fff;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    background-color: #fafafa;
+    line-height: 1.6;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--white-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+}
+
+.navbar .salon-name {
+    color: var(--secondary-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar .nav-link {
+    color: var(--text-color);
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.navbar .nav-link:hover {
+    color: var(--primary-color);
+}
+
+.navbar .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.navbar .btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/static/images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    color: var(--white-color);
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* Section Styles */
+.section-title {
+    color: var(--secondary-color);
+    font-weight: 700;
+    position: relative;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary-color);
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.service-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+/* Form Styles */
+.form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.25rem rgba(240, 98, 146, 0.25);
+}
+
+/* Beautician Profile */
+.beautician-profile .profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid var(--light-color);
+}
+
+.specialty-badge {
+    background-color: var(--light-color);
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+/* Appointment Cards */
+.appointment-card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.appointment-card.cancelled {
+    border-left-color: #dc3545;
+}
+
+.appointment-card.completed {
+    border-left-color: #28a745;
+}
+
+/* Beauty Tips */
+.tip-card {
+    background-color: var(--light-color);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.tip-category {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: var(--white-color);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+/* Client Profile */
+.profile-header {
+    background-color: var(--light-color);
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Testimonials */
+.testimonial-card {
+    background-color: var(--white-color);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.testimonial-rating {
+    color: #ffc107;
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-color);
+}
+
+footer h5 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+footer a {
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: var(--accent-color) !important;
+    text-decoration: none;
+}
+
+.social-icons a {
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .hero {
+        height: 400px;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+}
+
+/* Admin Dashboard */
+.stat-card {
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: var(--white-color);
+}
+
+.stat-card.clients {
+    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+}
+
+.stat-card.appointments {
+    background: linear-gradient(45deg, #a18cd1, #fbc2eb);
+}
+
+.stat-card.beauticians {
+    background: linear-gradient(45deg, #84fab0, #8fd3f4);
+}
+
+.stat-card.messages {
+    background: linear-gradient(45deg, #ffc3a0, #ffafbd);
+}
+
+.stat-card .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in;
+}

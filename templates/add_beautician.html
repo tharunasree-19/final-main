@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Add Beautician{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="display-5">Add New Beautician</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Beautician</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Beautician Information</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('add_beautician') }}" method="post">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <small class="text-muted">This will be used as their login username</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="specialty" class="form-label">Specialty</label>
+                                <select class="form-select" id="specialty" name="specialty" required>
+                                    <option value="">Select Specialty</option>
+                                    <option value="Hair Stylist">Hair Stylist</option>
+                                    <option value="Makeup Artist">Makeup Artist</option>
+                                    <option value="Nail Technician">Nail Technician</option>
+                                    <option value="Esthetician">Esthetician</option>
+                                    <option value="Massage Therapist">Massage Therapist</option>
+                                    <option value="Colorist">Colorist</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="qualification" class="form-label">Qualifications</label>
+                                <input type="text" class="form-control" id="qualification" name="qualification" required>
+                                <small class="text-muted">e.g., "Certified Hair Colorist", "Licensed Massage Therapist"</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="experience" class="form-label">Years of Experience</label>
+                                <input type="text" class="form-control" id="experience" name="experience" required>
+                                <small class="text-muted">e.g., "5 years", "10+ years"</small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Professional Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="5" required></textarea>
+                            <small class="text-muted">Brief description of the beautician's experience, specialties, and approach</small>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h5>Important Note</h5>
+                            <p class="mb-0">A user account will be automatically created for this beautician with the email address provided. They will receive a welcome email with temporary login credentials.</p>
+                        </div>
+                        
+                        <div class="text-end mt-3">
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Add Beautician</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Testimonials{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">What Our Clients Say</h1>
+    <p class="text-center mb-5">Read about experiences from our valued clients</p>
+    
+    <div class="row">
+        {% for testimonial in testimonials %}
+        <div class="col-md-6 mb-4">
+            <div class="card testimonial-card shadow h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">{{ testimonial.name }}</h5>
+                        <small class="text-muted">{{ testimonial.date }}</small>
+                    </div>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ testimonial.service }}</h6>
+                    <div class="my-2">
+                        {% for i in range(testimonial.rating) %}
+                        <i class="fas fa-star text-warning"></i>
+                        {% endfor %}
+                        {% for i in range(5 - testimonial.rating) %}
+                        <i class="far fa-star text-warning"></i>
+                        {% endfor %}
+                    </div>
+                    <p class="card-text">{{ testimonial.comment }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if is_logged_in %}
+    <div class="row mt-5 justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Share Your Experience</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('submit_testimonial') }}">
+                        <div class="mb-3">
+                            <label for="service" class="form-label">Service You Received</label>
+                            <select class="form-select" id="service" name="service" required>
+                                <option value="">Select a service...</option>
+                                <option value="Haircut & Styling">Haircut & Styling</option>
+                                <option value="Hair Coloring">Hair Coloring</option>
+                                <option value="Facial Treatment">Facial Treatment</option>
+                                <option value="Manicure">Manicure</option>
+                                <option value="Pedicure">Pedicure</option>
+                                <option value="Relaxing Massage">Relaxing Massage</option>
+                                <option value="Professional Makeup">Professional Makeup</option>
+                                <option value="Waxing Service">Waxing Service</option>
+                                <option value="Basic Beauty Package">Basic Beauty Package</option>
+                                <option value="Premium Pamper Package">Premium Pamper Package</option>
+                                <option value="Bridal Beauty Package">Bridal Beauty Package</option>
+                                <option value="Men's Grooming Package">Men's Grooming Package</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Your Rating</label>
+                            <div class="rating">
+                                <input type="radio" id="star5" name="rating" value="5" required>
+                                <label for="star5"><i class="far fa-star"></i></label>
+                                <input type="radio" id="star4" name="rating" value="4">
+                                <label for="star4"><i class="far fa-star"></i></label>
+                                <input type="radio" id="star3" name="rating" value="3">
+                                <label for="star3"><i class="far fa-star"></i></label>
+                                <input type="radio" id="star2" name="rating" value="2">
+                                <label for="star2"><i class="far fa-star"></i></label>
+                                <input type="radio" id="star1" name="rating" value="1">
+                                <label for="star1"><i class="far fa-star"></i></label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Your Experience</label>
+                            <textarea class="form-control" id="comment" name="comment" rows="4" required placeholder="Tell us about your experience..."></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Submit Testimonial</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center mt-5">
+        <p>Would you like to share your experience? <a href="{{ url_for('login') }}">Log in</a> to submit a testimonial.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    .testimonial-card {
+        border-left: 4px solid #ff69b4;
+        transition: transform 0.2s;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+    
+    .rating input {
+        display: none;
+    }
+    
+    .rating label {
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 0 0.2rem;
+        color: #ddd;
+    }
+    
+    .rating input:checked ~ label,
+    .rating label:hover,
+    .rating label:hover ~ label {
+        color: #ffc107;
+    }
+    
+    .rating label:hover ~ label i,
+    .rating label:hover i,
+    .rating input:checked ~ label i {
+        font-weight: 900;
+        content: "\f005";
+        font-family: "Font Awesome 5 Free";
+    }
+</style>
+<script>
+    // Script to handle star rating functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('.rating label');
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const starIcon = this.querySelector('i');
+                
+                // Reset all stars
+                stars.forEach(s => {
+                    s.querySelector('i').className = 'far fa-star';
+                });
+                
+                // Set clicked star and all stars before it
+                let currentStar = this;
+                while (currentStar) {
+                    currentStar.querySelector('i').className = 'fas fa-star';
+                    currentStar = currentStar.nextElementSibling;
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

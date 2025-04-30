@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Beauty Tips{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12 text-center">
+            <h1 class="display-4 mb-3">Beauty Tips & Advice</h1>
+            <p class="lead">Discover professional beauty tips and solutions to common beauty concerns</p>
+        </div>
+    </div>
+    
+    <!-- Beauty Tips Section -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2 class="mb-4">Latest Beauty Tips</h2>
+        </div>
+        
+        {% for tip in tips %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">{{ tip.title }}</h5>
+                    <small>Category: {{ tip.category }}</small>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ tip.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Beauty Concerns Section -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h2 class="mb-4">Common Beauty Concerns</h2>
+            <p>Find solutions to common beauty concerns and when to see a professional</p>
+        </div>
+        
+        <div class="col-md-12">
+            <div class="accordion" id="beautyConcernsAccordion">
+                {% for key, concern in concerns.items() %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ key }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ key }}" aria-expanded="false" aria-controls="collapse{{ key }}">
+                            {{ key|replace('_', ' ')|title }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ key }}" class="accordion-collapse collapse" aria-labelledby="heading{{ key }}" data-bs-parent="#beautyConcernsAccordion">
+                        <div class="accordion-body">
+                            <h5>Symptoms</h5>
+                            <p>{{ concern.symptoms }}</p>
+                            
+                            <h5>Remedy</h5>
+                            <p>{{ concern.remedy }}</p>
+                            
+                            <div class="alert alert-info mt-3">
+                                <h5>When to See a Professional</h5>
+                                <p class="mb-0">{{ concern.when_to_see_professional }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Book Consultation Section -->
+    <div class="row mt-5">
+        <div class="col-md-12 text-center">
+            <div class="card p-4 bg-light">
+                <h3>Need Personalized Beauty Advice?</h3>
+                <p>Book a consultation with one of our beauty experts today</p>
+                <a href="{{ url_for('appointments') }}" class="btn btn-primary">Book a Consultation</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

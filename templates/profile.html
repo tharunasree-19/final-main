@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">My Profile</h1>
+    
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Account Information</h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-circle fa-5x text-primary"></i>
+                        <h4 class="mt-2">{{ user.name }}</h4>
+                        <p class="text-muted">Member since {{ user.registration_date.split(' ')[0] }}</p>
+                    </div>
+                    
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-envelope me-2"></i> Email</span>
+                            <span>{{ user.email }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-phone me-2"></i> Phone</span>
+                            <span>{{ user.phone }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-user-tag me-2"></i> Account Type</span>
+                            <span class="badge bg-info">{{ user.user_type|capitalize }}</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="{{ url_for('change_password') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-key me-2"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Beauty Profile</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('update_profile') }}" method="post">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ client.name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" value="{{ client.phone }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="skin_type" class="form-label">Skin Type</label>
+                                <select class="form-select" id="skin_type" name="skin_type">
+                                    <option value="" {% if not client.skin_type %}selected{% endif %}>-- Select Skin Type --</option>
+                                    <option value="normal" {% if client.skin_type == 'normal' %}selected{% endif %}>Normal</option>
+                                    <option value="dry" {% if client.skin_type == 'dry' %}selected{% endif %}>Dry</option>
+                                    <option value="oily" {% if client.skin_type == 'oily' %}selected{% endif %}>Oily</option>
+                                    <option value="combination" {% if client.skin_type == 'combination' %}selected{% endif %}>Combination</option>
+                                    <option value="sensitive" {% if client.skin_type == 'sensitive' %}selected{% endif %}>Sensitive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="hair_type" class="form-label">Hair Type</label>
+                                <select class="form-select" id="hair_type" name="hair_type">
+                                    <option value="" {% if not client.hair_type %}selected{% endif %}>-- Select Hair Type --</option>
+                                    <option value="straight" {% if client.hair_type == 'straight' %}selected{% endif %}>Straight</option>
+                                    <option value="wavy" {% if client.hair_type == 'wavy' %}selected{% endif %}>Wavy</option>
+                                    <option value="curly" {% if client.hair_type == 'curly' %}selected{% endif %}>Curly</option>
+                                    <option value="coily" {% if client.hair_type == 'coily' %}selected{% endif %}>Coily</option>
+                                    <option value="fine" {% if client.hair_type == 'fine' %}selected{% endif %}>Fine</option>
+                                    <option value="thick" {% if client.hair_type == 'thick' %}selected{% endif %}>Thick</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="allergies" class="form-label">Allergies (separate with commas)</label>
+                            <input type="text" class="form-control" id="allergies" name="allergies" value="{{ client.allergies|join(', ') }}">
+                            <div class="form-text">List any ingredients or products you're allergic to.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="preferences" class="form-label">Beauty Preferences (separate with commas)</label>
+                            <input type="text" class="form-control" id="preferences" name="preferences" value="{{ client.preferences|join(', ') }}">
+                            <div class="form-text">List your preferred products, treatments, or styles.</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Recent Appointments</h3>
+                </div>
+                <div class="card-body">
+                    {% if appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Beautician</th>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                <tr>
+                                    <td>{{ appointment.service_name }}</td>
+                                    <td>{{ appointment.beautician_name }}</td>
+                                    <td>{{ appointment.appointment_date }} at {{ appointment.appointment_time }}</td>
+                                    <td>
+                                        <span class="badge {% if appointment.status == 'scheduled' %}bg-success{% elif appointment.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                            {{ appointment.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('my_appointments') }}" class="btn btn-outline-primary">View All Appointments</a>
+                    </div>
+                    {% else %}
+                    <p class="text-center">You don't have any appointments yet.</p>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('appointments') }}" class="btn btn-outline-primary">Book an Appointment</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

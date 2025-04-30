@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}My Appointments{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">My Appointments</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <a href="{{ url_for('appointments') }}" class="btn btn-primary">Book New Appointment</a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Upcoming Appointments</h3>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Beautician</th>
+                                    <th>Date & Time</th>
+                                    <th>Duration</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in upcoming_appointments %}
+                                <tr>
+                                    <td>{{ appointment.service_name }}</td>
+                                    <td>{{ appointment.beautician_name }}</td>
+                                    <td>{{ appointment.appointment_date }} at {{ appointment.appointment_time }}</td>
+                                    <td>{{ appointment.service_duration }} min</td>
+                                    <td>${{ appointment.service_price }}</td>
+                                    <td><span class="badge bg-success">{{ appointment.status }}</span></td>
+                                    <td>
+                                        <a href="{{ url_for('reschedule_appointment', appointment_id=appointment.appointment_id) }}" class="btn btn-sm btn-outline-primary mb-1">Reschedule</a>
+                                        <form action="{{ url_for('cancel_appointment', appointment_id=appointment.appointment_id) }}" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to cancel this appointment?')">Cancel</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center">You don't have any upcoming appointments.</p>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('appointments') }}" class="btn btn-outline-primary">Book an Appointment</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h3 class="mb-0">Past Appointments</h3>
+                </div>
+                <div class="card-body">
+                    {% if past_appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Beautician</th>
+                                    <th>Date & Time</th>
+                                    <th>Duration</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in past_appointments %}
+                                <tr>
+                                    <td>{{ appointment.service_name }}</td>
+                                    <td>{{ appointment.beautician_name }}</td>
+                                    <td>{{ appointment.appointment_date }} at {{ appointment.appointment_time }}</td>
+                                    <td>{{ appointment.service_duration }} min</td>
+                                    <td>${{ appointment.service_price }}</td>
+                                    <td>
+                                        <span class="badge {% if appointment.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                            {{ appointment.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center">You don't have any past appointments.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

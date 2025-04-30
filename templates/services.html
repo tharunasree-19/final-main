@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Our Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Our Beauty Services</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <p class="lead text-center">
+                At Glow Beauty Salon, we offer a wide range of professional beauty services to enhance your natural beauty and provide relaxation.
+            </p>
+        </div>
+    </div>
+    
+    {% for category, services in categorized_services.items() %}
+    <div class="service-category mb-5">
+        <h2 class="border-bottom pb-2 mb-4">{{ category }} Services</h2>
+        
+        <div class="row">
+            {% for service in services %}
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 service-card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ service.name }}</h3>
+                        <div class="service-details mb-3">
+                            <span class="badge bg-primary me-2">{{ service.duration }} min</span>
+                            <span class="badge bg-success">${{ service.price }}</span>
+                        </div>
+                        <p class="card-text">{{ service.description }}</p>
+                        
+                        {% if is_logged_in %}
+                        <a href="{{ url_for('appointments') }}" class="btn btn-sm btn-outline-primary">Book Now</a>
+                        {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-primary">Login to Book</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+    
+    <div class="text-center mt-5">
+        <h3>Looking for Complete Beauty Packages?</h3>
+        <p>Check out our specially curated beauty packages for a comprehensive beauty experience.</p>
+        <a href="{{ url_for('beauty_packages') }}" class="btn btn-primary">View Beauty Packages</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add any service-specific scripts here
+    });
+</script>
+{% endblock %}

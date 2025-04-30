@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Reschedule Appointment{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Reschedule Appointment</h2>
+                </div>
+                <div class="card-body">
+                    <div class="current-appointment mb-4">
+                        <h4>Current Appointment Details</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th>Service:</th>
+                                    <td>{{ appointment.service_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Beautician:</th>
+                                    <td>{{ appointment.beautician_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Current Date:</th>
+                                    <td>{{ appointment.appointment_date }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Current Time:</th>
+                                    <td>{{ appointment.appointment_time }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Duration:</th>
+                                    <td>{{ appointment.service_duration }} minutes</td>
+                                </tr>
+                                <tr>
+                                    <th>Price:</th>
+                                    <td>${{ appointment.service_price }}</td>
+                                </tr>
+                                {% if appointment.special_requests %}
+                                <tr>
+                                    <th>Special Requests:</th>
+                                    <td>{{ appointment.special_requests }}</td>
+                                </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <form action="{{ url_for('reschedule_appointment', appointment_id=appointment.appointment_id) }}" method="post">
+                        <h4>Select New Date and Time</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="new_date" class="form-label">New Date</label>
+                                <input type="date" name="new_date" id="new_date" class="form-control" min="{{ now.strftime('%Y-%m-%d') }}" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="new_time" class="form-label">New Time</label>
+                                <select name="new_time" id="new_time" class="form-select" required>
+                                    <option value="">-- Select Time --</option>
+                                    <option value="09:00">9:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="13:00">1:00 PM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="15:00">3:00 PM</option>
+                                    <option value="16:00">4:00 PM</option>
+                                    <option value="17:00">5:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Confirm Reschedule</button>
+                            <a href="{{ url_for('my_appointments') }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set minimum date for the appointment date picker to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('new_date').setAttribute('min', today);
+    });
+</script>
+{% endblock %}
